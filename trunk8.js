@@ -8,7 +8,15 @@
  * Date: September 26, 2012
  */
 
-(function ($) {
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery'], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        factory(require('jquery'));
+    } else {
+        factory(root.jQuery);
+    }
+}(this, function ($) {
 	var methods,
 		utils,
 		SIDES = {
@@ -51,7 +59,7 @@
 			return str.split(/\s/g);
 		}
 		var allResults = [],
-			reg = /<([a-z]+)([^<]*)(?:>(.*?(?!<\1>))<\/\1>|\s+\/>)(['.?!,]*)|((?:[^<>\s])+['.?!,]*\w?|<br\s?\/?>)/ig,
+			reg = /<([a-z]+)([^<]*)(?:>([\S\s]*?(?!<\1>))<\/\1>|\s+\/>)(['.?!,]*)|((?:[^<>\s])+['.?!,]*\w?|<br\s?\/?>)/ig,
 			outArr = reg.exec(str),
 			lastI,
 			ind;
@@ -125,7 +133,7 @@
 			htmlResults = biteHelper(htmlObject);
 
 		// Add fill if doesn't exist. This will place it outside the HTML elements.
-		if (htmlResults.slice(htmlResults.length - fill.length) === fill) {
+		if (htmlResults.slice(htmlResults.length - fill.length) !== fill) {
 			htmlResults += fill;
 		}
 
@@ -416,4 +424,4 @@
 		onTruncate: function () {},
 		wordWrap: false
 	};
-})(jQuery);
+}));
